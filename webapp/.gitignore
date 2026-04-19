@@ -1,0 +1,16 @@
+# Runtime data
+backend/app/data/cache/
+backend/app/data/ocean_state_rolling.parquet
+backend/app/data/ocean_state_rolling.pkl
+backend/app/data/last_refresh.txt
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Editor
+.vscode/
+.idea/
