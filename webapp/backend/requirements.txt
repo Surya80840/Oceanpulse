@@ -1,0 +1,17 @@
+fastapi>=0.110
+uvicorn[standard]>=0.27
+pydantic>=2.5
+numpy>=1.26
+pandas>=2.1
+scikit-learn>=1.3
+joblib>=1.3
+python-multipart>=0.0.9
+
+# Live feed dependencies
+requests>=2.31
+xarray>=2024.1
+netCDF4>=1.6
+h5netcdf>=1.3
+h5py>=3.10
+copernicusmarine>=2.0
+pyarrow>=14.0

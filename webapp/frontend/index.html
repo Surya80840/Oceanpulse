@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OceanPulse - Species Forecast</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="brand">
+            <span class="brand-mark">OP</span>
+            <div>
+                <h1>OceanPulse</h1>
+                <p class="tagline">Species distribution forecasting - US West Coast (30-48 &deg;N, 124-116 &deg;W)</p>
+            </div>
+        </div>
+        <div class="status" id="status-bar">
+            <span class="status-dot" id="status-dot"></span>
+            <span id="status-text">loading...</span>
+        </div>
+    </header>
+
+    <main class="app-body">
+        <aside class="sidebar">
+            <section class="card">
+                <div class="tabs" role="tablist">
+                    <button class="tab active" data-tab="bbox" role="tab">Bounding box &rarr; species</button>
+                    <button class="tab" data-tab="species" role="tab">Species &rarr; locations</button>
+                </div>
+
+                <div class="tab-panel" data-panel="bbox">
+                    <p class="hint">
+                        Draw a rectangle on the map (or type the bounds below). The pipeline scores every
+                        grid cell inside it for the next 7 days and returns the 10 most likely fish species.
+                    </p>
+                    <div class="grid-inputs">
+                        <label>Lat min<input type="number" id="lat-min" min="30" max="48" step="0.25" value="36"></label>
+                        <label>Lat max<input type="number" id="lat-max" min="30" max="48" step="0.25" value="40"></label>
+                        <label>Lon min<input type="number" id="lon-min" min="-124" max="-116" step="0.25" value="-124"></label>
+                        <label>Lon max<input type="number" id="lon-max" min="-124" max="-116" step="0.25" value="-121"></label>
+                    </div>
+                    <button class="btn primary" id="run-bbox">Run forecast</button>
+                </div>
+
+                <div class="tab-panel hidden" data-panel="species">
+                    <p class="hint">
+                        Pick a species. The system computes its probability for every one of the 2,409 grid
+                        cells over the next 7 days, returns the top 10 hotspots, and paints the heat map.
+                    </p>
+                    <label class="full">
+                        Species
+                        <input list="species-list" id="species-input" placeholder="Start typing&hellip;">
+                        <datalist id="species-list"></datalist>
+                    </label>
+                    <button class="btn primary" id="run-species">Find hotspots</button>
+                </div>
+            </section>
+
+            <section class="card results" id="results">
+                <h2 id="results-title">Results</h2>
+                <p class="muted" id="results-meta">Run a query to see results.</p>
+                <ol class="rank" id="rank-list"></ol>
+            </section>
+
+            <section class="card meta">
+                <h3>About the forecast</h3>
+                <ul>
+                    <li><strong>Model 1</strong> - 30-day rolling ocean state; real data only from ERDDAP (SST, chlorophyll) and Copernicus Marine (SSH, salinity, O<sub>2</sub>). Refreshes one day at a time.</li>
+                    <li><strong>Model 2</strong> - 369 logistic-regression species classifiers trained on CalCOFI + iNaturalist + NOAA WCGBT observations.</li>
+                    <li>Cells without any training observation (<code>n_obs = 0</code>) are drawn dimmer; interpret predictions with caution there.</li>
+                </ul>
+            </section>
+        </aside>
+
+        <section class="map-wrap">
+            <div id="map"></div>
+            <div class="legend" id="legend">
+                <span class="legend-title">Probability</span>
+                <div class="legend-gradient"></div>
+                <div class="legend-ticks">
+                    <span>0.0</span><span>0.25</span><span>0.5</span><span>0.75</span><span>1.0</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="overlay hidden" id="overlay">
+        <div class="overlay-card">
+            <div class="spinner"></div>
+            <p id="overlay-text">Working&hellip;</p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css">
+    <script src="/app.js"></script>
+</body>
+</html>
